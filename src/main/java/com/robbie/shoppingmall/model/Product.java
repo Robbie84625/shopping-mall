@@ -1,5 +1,6 @@
 package com.robbie.shoppingmall.model;
 
+import com.robbie.shoppingmall.constant.ProductCategory;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,8 +20,9 @@ public class Product {
     @Column(name="product_name")
     private String productName;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="category")
-    private String category;
+    private ProductCategory category;
 
     @Column(name="image_url")
     private String imageUrl;
