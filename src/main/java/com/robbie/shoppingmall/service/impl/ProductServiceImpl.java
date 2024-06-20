@@ -70,4 +70,9 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(existingProduct);
         }
     }
+
+    @Override
+    public void deleteProductById(Integer productId) {
+        productRepository.deleteById(productId);
+    }
 }
