@@ -6,4 +6,5 @@ import com.robbie.shoppingmall.model.Product;
 public interface ProductService {
     Product getProductById(Integer id);
     Integer createProduct(ProductRequest productRequest);
+    void updateProduct(Integer productId,ProductRequest productRequest);
 }

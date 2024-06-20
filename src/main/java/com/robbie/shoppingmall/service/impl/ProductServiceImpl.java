@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -41,5 +42,32 @@ public class ProductServiceImpl implements ProductService {
             return savedProduct.getProductId();
         }
         return null;
+    }
+
+    @Override
+    public void updateProduct(Integer productId, ProductRequest productRequest) {
+        Date now = new Date();
+
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+
+        if (optionalProduct.isPresent()) {
+            Product existingProduct = optionalProduct.get();
+
+            // 更新所有字段
+            existingProduct.setProductName(productRequest.getProductName());
+            existingProduct.setCategory(productRequest.getProductCategory());
+            existingProduct.setImageUrl(productRequest.getImageUrl());
+            existingProduct.setPrice(productRequest.getPrice());
+            existingProduct.setStock(productRequest.getStock());
+
+            // 更新 description，如果它不為空
+            if (productRequest.getDescription() != null) {
+                existingProduct.setDescription(productRequest.getDescription());
+            }
+
+            existingProduct.setLastModifiedDate(now);
+
+            productRepository.save(existingProduct);
+        }
     }
 }
