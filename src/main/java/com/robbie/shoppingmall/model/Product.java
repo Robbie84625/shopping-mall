@@ -1,7 +1,9 @@
 package com.robbie.shoppingmall.model;
 
 import com.robbie.shoppingmall.constant.ProductCategory;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,8 @@ import java.util.Date;
 @Table(name="product")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -33,7 +37,7 @@ public class Product {
     @Column(name="stock")
     private Integer stock;
 
-    @Column(name="description")
+    @Column(name="description", nullable = true)
     private String description;
 
     @Column(name="create_date")
