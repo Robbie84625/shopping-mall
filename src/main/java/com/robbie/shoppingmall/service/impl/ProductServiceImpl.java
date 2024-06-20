@@ -8,12 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
+
+    @Override
+    public List<Product> getProducts() {
+        return StreamSupport.stream(productRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public Product getProductById(Integer id){
