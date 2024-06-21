@@ -1,5 +1,6 @@
 package com.robbie.shoppingmall.controller;
 
+import com.robbie.shoppingmall.constant.ProductCategory;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
