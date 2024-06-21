@@ -1,5 +1,6 @@
 package com.robbie.shoppingmall.controller;
 
+import com.robbie.shoppingmall.constant.ProductCategory;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
@@ -9,11 +10,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class ProductController {
     @Autowired
     private ProductService productService;
+
+    public  ResponseEntity<List<Product>> getProducts(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam @Valid ProductCategory productCategory
+            ){
+        List<Product> productList = productService.getProducts(page,productCategory);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productList);
+    }
 
     @GetMapping("/product/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable Integer productId){
