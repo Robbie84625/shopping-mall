@@ -1,5 +1,6 @@
 package com.robbie.shoppingmall.controller;
 
+import com.robbie.shoppingmall.constant.ProductCategory;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
@@ -16,9 +17,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(){
-        List<Product> productList = productService.getProducts();
+    public  ResponseEntity<List<Product>> getProducts(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam @Valid ProductCategory productCategory
+            ){
+        List<Product> productList = productService.getProducts(page,productCategory);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }

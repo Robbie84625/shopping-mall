@@ -1,10 +1,14 @@
 package com.robbie.shoppingmall.service.impl;
 
+import com.robbie.shoppingmall.constant.ProductCategory;
 import com.robbie.shoppingmall.dao.ProductRepository;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,9 +23,10 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> getProducts() {
-        return StreamSupport.stream(productRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+    public List<Product> getProducts(int page, ProductCategory productCategory) {
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Product> productPage = productRepository.findByCategory(productCategory, pageable);
+        return productPage.getContent();
     }
 
     @Override
