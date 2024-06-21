@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -81,5 +83,10 @@ public class ProductServiceImpl implements ProductService {
 
             productRepository.save(existingProduct);
         }
+    }
+
+    @Override
+    public void deleteProductById(Integer productId) {
+        productRepository.deleteById(productId);
     }
 }
