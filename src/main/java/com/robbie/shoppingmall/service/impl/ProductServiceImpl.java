@@ -1,7 +1,7 @@
 package com.robbie.shoppingmall.service.impl;
 
-import com.robbie.shoppingmall.constant.ProductCategory;
 import com.robbie.shoppingmall.dao.ProductRepository;
+import com.robbie.shoppingmall.dto.ProductQueryParams;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
@@ -22,19 +22,22 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> getProducts(int page, ProductCategory productCategory,String keyword) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public List<Product> getProducts(ProductQueryParams productQueryParams) {
+        Pageable pageable = PageRequest.of(productQueryParams.getPage(), 10);
         Page<Product> productPage;
 
-        if (productCategory != null && keyword != null && !keyword.trim().isEmpty()) {
+        if (productQueryParams.getProductCategory() != null
+                && productQueryParams.getKeyword() != null
+                && !productQueryParams.getKeyword().trim().isEmpty()
+        ) {
             // 同時按類別和關鍵字搜索
-            productPage = productRepository.findByCategoryAndProductNameContaining(productCategory, keyword, pageable);
-        } else if (productCategory != null) {
+            productPage = productRepository.findByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword(), pageable);
+        } else if (productQueryParams.getProductCategory() != null) {
             // 只按類別搜索
-            productPage = productRepository.findByCategory(productCategory, pageable);
-        } else if (keyword != null && !keyword.trim().isEmpty()) {
+            productPage = productRepository.findByCategory(productQueryParams.getProductCategory(), pageable);
+        } else if (productQueryParams.getKeyword() != null && !productQueryParams.getKeyword().trim().isEmpty()) {
             // 只按關鍵字搜索
-            productPage = productRepository.findByProductNameContaining(keyword, pageable);
+            productPage = productRepository.findByProductNameContaining(productQueryParams.getKeyword(), pageable);
         } else {
             // 沒有搜索條件，返回所有產品
             productPage = productRepository.findAll(pageable);

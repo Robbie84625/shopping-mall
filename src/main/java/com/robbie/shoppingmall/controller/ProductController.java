@@ -1,6 +1,7 @@
 package com.robbie.shoppingmall.controller;
 
 import com.robbie.shoppingmall.constant.ProductCategory;
+import com.robbie.shoppingmall.dto.ProductQueryParams;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
@@ -23,7 +24,13 @@ public class ProductController {
             @RequestParam(required = false) ProductCategory productCategory,
             @RequestParam(required = false) String keyword
             ){
-        List<Product> productList = productService.getProducts(page,productCategory,keyword);
+        ProductQueryParams productQueryParams = new ProductQueryParams();
+        productQueryParams.setKeyword(keyword);
+        productQueryParams.setProductCategory(productCategory);
+        productQueryParams.setPage(page);
+
+
+        List<Product> productList = productService.getProducts(productQueryParams);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
