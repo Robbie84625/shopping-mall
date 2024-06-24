@@ -20,9 +20,10 @@ public class ProductController {
     @GetMapping("/products")
     public  ResponseEntity<List<Product>> getProducts(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam(required = false)  ProductCategory productCategory
+            @RequestParam(required = false) ProductCategory productCategory,
+            @RequestParam(required = false) String keyword
             ){
-        List<Product> productList = productService.getProducts(page,productCategory);
+        List<Product> productList = productService.getProducts(page,productCategory,keyword);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
