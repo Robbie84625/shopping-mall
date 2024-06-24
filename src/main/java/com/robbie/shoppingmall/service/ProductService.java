@@ -15,6 +15,5 @@ public interface ProductService {
 
     void deleteProductById(Integer productId);
 
-
-    List<Product> getProducts(int page, ProductCategory productCategory);
+    List<Product> getProducts(int page, ProductCategory productCategory,String keyword);
 }

@@ -14,8 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -23,15 +22,25 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> getProducts(int page, ProductCategory productCategory) {
+    public List<Product> getProducts(int page, ProductCategory productCategory,String keyword) {
         Pageable pageable = PageRequest.of(page, 10);
-        if(productCategory!=null){
-            Page<Product> productPageCategory = productRepository.findByCategory(productCategory, pageable);
-            return productPageCategory.getContent();
-        }else{
-            Page<Product> productPage = productRepository.findAll(pageable);
-            return productPage.getContent();
+        Page<Product> productPage;
+
+        if (productCategory != null && keyword != null && !keyword.trim().isEmpty()) {
+            // 同時按類別和關鍵字搜索
+            productPage = productRepository.findByCategoryAndProductNameContaining(productCategory, keyword, pageable);
+        } else if (productCategory != null) {
+            // 只按類別搜索
+            productPage = productRepository.findByCategory(productCategory, pageable);
+        } else if (keyword != null && !keyword.trim().isEmpty()) {
+            // 只按關鍵字搜索
+            productPage = productRepository.findByProductNameContaining(keyword, pageable);
+        } else {
+            // 沒有搜索條件，返回所有產品
+            productPage = productRepository.findAll(pageable);
         }
+
+        return productPage.getContent();
     }
 
     @Override
