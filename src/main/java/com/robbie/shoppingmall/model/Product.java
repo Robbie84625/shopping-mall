@@ -40,8 +40,8 @@ public class Product {
     @Column(name="description", nullable = true)
     private String description;
 
-    @Column(name="create_date")
-    private Date createDate;
+    @Column(name="created_date")
+    private Date createdDate;
 
     @Column(name="last_modified_date")
     private Date lastModifiedDate;
