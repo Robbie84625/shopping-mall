@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -23,7 +24,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> getProducts(ProductQueryParams productQueryParams) {
-        Pageable pageable = PageRequest.of(productQueryParams.getPage(), 10);
+        // 指定排序方式和排序欄位
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(productQueryParams.getSort()) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        String orderBy = productQueryParams.getOrderBy() != null ? productQueryParams.getOrderBy() : "createdDate";
+        // 建立分頁和排序的設定
+        Pageable pageable = PageRequest.of(productQueryParams.getPage(), 10, Sort.by(sortDirection, orderBy));
         Page<Product> productPage;
 
         if (productQueryParams.getProductCategory() != null

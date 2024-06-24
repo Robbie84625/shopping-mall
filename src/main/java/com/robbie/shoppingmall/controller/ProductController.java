@@ -20,14 +20,22 @@ public class ProductController {
 
     @GetMapping("/products")
     public  ResponseEntity<List<Product>> getProducts(
+            // 查詢條件 Filtering
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(required = false) ProductCategory productCategory,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            // 排序 Sorting
+            @RequestParam(defaultValue = "createdDate") String orderBy,
+            @RequestParam(defaultValue = "desc") String sort
             ){
-        ProductQueryParams productQueryParams = new ProductQueryParams();
-        productQueryParams.setKeyword(keyword);
-        productQueryParams.setProductCategory(productCategory);
-        productQueryParams.setPage(page);
+
+        ProductQueryParams productQueryParams = ProductQueryParams.builder()
+                .keyword(keyword)
+                .productCategory(productCategory)
+                .page(page)
+                .orderBy(orderBy)
+                .sort(sort)
+                .build();
 
 
         List<Product> productList = productService.getProducts(productQueryParams);
