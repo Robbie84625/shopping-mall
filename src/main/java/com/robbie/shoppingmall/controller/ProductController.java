@@ -8,11 +8,15 @@ import com.robbie.shoppingmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+@Validated
 @RestController
 public class ProductController {
     @Autowired
@@ -20,8 +24,10 @@ public class ProductController {
 
     @GetMapping("/products")
     public  ResponseEntity<List<Product>> getProducts(
+            //分頁 Pagination
+            @RequestParam(defaultValue = "0") @Min(0) Integer page,
+            @RequestParam(defaultValue = "10") @Max(100) @Min(0) Integer limit,
             // 查詢條件 Filtering
-            @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(required = false) ProductCategory productCategory,
             @RequestParam(required = false) String keyword,
             // 排序 Sorting
@@ -33,6 +39,7 @@ public class ProductController {
                 .keyword(keyword)
                 .productCategory(productCategory)
                 .page(page)
+                .limit(limit)
                 .orderBy(orderBy)
                 .sort(sort)
                 .build();
