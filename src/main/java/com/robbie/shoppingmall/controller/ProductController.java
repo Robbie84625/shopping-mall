@@ -17,9 +17,10 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @GetMapping("/products")
     public  ResponseEntity<List<Product>> getProducts(
             @RequestParam(defaultValue = "0") Integer page,
-            @RequestParam @Valid ProductCategory productCategory
+            @RequestParam(required = false)  ProductCategory productCategory
             ){
         List<Product> productList = productService.getProducts(page,productCategory);
 
