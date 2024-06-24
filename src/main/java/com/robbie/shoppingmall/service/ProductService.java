@@ -1,6 +1,6 @@
 package com.robbie.shoppingmall.service;
 
-import com.robbie.shoppingmall.constant.ProductCategory;
+import com.robbie.shoppingmall.dto.ProductQueryParams;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 
@@ -15,5 +15,5 @@ public interface ProductService {
 
     void deleteProductById(Integer productId);
 
-    List<Product> getProducts(int page, ProductCategory productCategory,String keyword);
+    List<Product> getProducts(ProductQueryParams productQueryParams);
 }
