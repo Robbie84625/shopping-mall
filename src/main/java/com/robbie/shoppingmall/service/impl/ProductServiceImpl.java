@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
         Sort.Direction sortDirection = "asc".equalsIgnoreCase(productQueryParams.getSort()) ? Sort.Direction.ASC : Sort.Direction.DESC;
         String orderBy = productQueryParams.getOrderBy() != null ? productQueryParams.getOrderBy() : "createdDate";
         // 建立分頁和排序的設定
-        Pageable pageable = PageRequest.of(productQueryParams.getPage(), 10, Sort.by(sortDirection, orderBy));
+        Pageable pageable = PageRequest.of(productQueryParams.getPage(), productQueryParams.getLimit(), Sort.by(sortDirection, orderBy));
         Page<Product> productPage;
 
         if (productQueryParams.getProductCategory() != null
