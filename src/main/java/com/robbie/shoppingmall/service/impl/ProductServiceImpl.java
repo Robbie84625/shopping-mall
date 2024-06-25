@@ -12,9 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -23,32 +21,23 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> getProducts(ProductQueryParams productQueryParams) {
+    public Map<String, Object> getProducts(ProductQueryParams productQueryParams) {
         // 指定排序方式和排序欄位
         Sort.Direction sortDirection = "asc".equalsIgnoreCase(productQueryParams.getSort()) ? Sort.Direction.ASC : Sort.Direction.DESC;
         String orderBy = productQueryParams.getOrderBy() != null ? productQueryParams.getOrderBy() : "createdDate";
         // 建立分頁和排序的設定
-        Pageable pageable = PageRequest.of(productQueryParams.getPage(), productQueryParams.getLimit(), Sort.by(sortDirection, orderBy));
-        Page<Product> productPage;
+        Pageable pageable = PageRequest.of(productQueryParams.getPage(), productQueryParams.getLimit()+1, Sort.by(sortDirection, orderBy));
+        Page<Product> productPage = fetchProducts(productQueryParams,pageable);
 
-        if (productQueryParams.getProductCategory() != null
-                && productQueryParams.getKeyword() != null
-                && !productQueryParams.getKeyword().trim().isEmpty()
-        ) {
-            // 同時按類別和關鍵字搜索
-            productPage = productRepository.findByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword(), pageable);
-        } else if (productQueryParams.getProductCategory() != null) {
-            // 只按類別搜索
-            productPage = productRepository.findByCategory(productQueryParams.getProductCategory(), pageable);
-        } else if (productQueryParams.getKeyword() != null && !productQueryParams.getKeyword().trim().isEmpty()) {
-            // 只按關鍵字搜索
-            productPage = productRepository.findByProductNameContaining(productQueryParams.getKeyword(), pageable);
-        } else {
-            // 沒有搜索條件，返回所有產品
-            productPage = productRepository.findAll(pageable);
+        //判斷是最後一頁邏輯
+        List<Product> products = new ArrayList<>(productPage.getContent());
+        if (products.size() > productQueryParams.getLimit()) {
+            products.remove(products.size() - 1);
         }
 
-        return productPage.getContent();
+        return createProductResponse(productQueryParams.getPage(),productPage, products);
+
+
     }
 
     @Override
@@ -110,5 +99,32 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProductById(Integer productId) {
         productRepository.deleteById(productId);
+    }
+
+    private Page<Product> fetchProducts(ProductQueryParams productQueryParams,Pageable pageable){
+        if (productQueryParams.getProductCategory() != null
+                && productQueryParams.getKeyword() != null
+                && !productQueryParams.getKeyword().trim().isEmpty()
+        ) {
+            // 同時按類別和關鍵字搜索
+            return productRepository.findByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword(), pageable);
+        } else if (productQueryParams.getProductCategory() != null) {
+            // 只按類別搜索
+            return productRepository.findByCategory(productQueryParams.getProductCategory(), pageable);
+        } else if (productQueryParams.getKeyword() != null && !productQueryParams.getKeyword().trim().isEmpty()) {
+            // 只按關鍵字搜索
+            return productRepository.findByProductNameContaining(productQueryParams.getKeyword(), pageable);
+        } else {
+            // 沒有搜索條件，返回所有產品
+            return productRepository.findAll(pageable);
+        }
+    }
+    //建立返回格式
+    private Map<String,Object> createProductResponse(int page, Page<Product> productPage, List<Product> products){
+        Map<String, Object> response = new HashMap<>();
+        response.put("page", page);
+        response.put("next_page", productPage.hasNext() ? page + 1 : null);
+        response.put("data", products);
+        return response;
     }
 }

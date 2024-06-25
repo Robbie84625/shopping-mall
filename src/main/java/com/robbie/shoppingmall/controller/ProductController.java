@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.util.List;
+import java.util.Map;
 
 @Validated
 @RestController
@@ -23,7 +23,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public  ResponseEntity<List<Product>> getProducts(
+    public  ResponseEntity<Map<String, Object>> getProducts(
             //分頁 Pagination
             @RequestParam(defaultValue = "0") @Min(0) Integer page,
             @RequestParam(defaultValue = "10") @Max(100) @Min(0) Integer limit,
@@ -45,9 +45,9 @@ public class ProductController {
                 .build();
 
 
-        List<Product> productList = productService.getProducts(productQueryParams);
+        Map<String, Object> products= productService.getProducts(productQueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+        return ResponseEntity.status(HttpStatus.OK).body(products);
     }
 
     @GetMapping("/product/{productId}")
