@@ -5,6 +5,7 @@ import com.robbie.shoppingmall.dto.ProductQueryParams;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
+import com.robbie.shoppingmall.util.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/products")
-    public  ResponseEntity<Map<String, Object>> getProducts(
+    public  ResponseEntity<PagedResponse<Product>> getProducts(
             //分頁 Pagination
             @RequestParam(defaultValue = "0") @Min(0) Integer page,
             @RequestParam(defaultValue = "10") @Max(100) @Min(0) Integer limit,
@@ -45,7 +46,7 @@ public class ProductController {
                 .build();
 
 
-        Map<String, Object> products= productService.getProducts(productQueryParams);
+        PagedResponse<Product> products= productService.getProducts(productQueryParams);
 
         return ResponseEntity.status(HttpStatus.OK).body(products);
     }

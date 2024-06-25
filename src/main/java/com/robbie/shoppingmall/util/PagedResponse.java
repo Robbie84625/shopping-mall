@@ -1,5 +1,6 @@
 package com.robbie.shoppingmall.util;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,9 +8,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class Page<T> {
+@Builder
+public class PagedResponse<T> {
     private Integer limit;
     private Integer page;
-    private Integer total;
+    private Integer nextPage;
+    private long total;
     private List<T> result;
 }

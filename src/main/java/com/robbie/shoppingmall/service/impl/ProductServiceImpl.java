@@ -5,6 +5,7 @@ import com.robbie.shoppingmall.dto.ProductQueryParams;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
+import com.robbie.shoppingmall.util.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public Map<String, Object> getProducts(ProductQueryParams productQueryParams) {
+    public PagedResponse<Product> getProducts(ProductQueryParams productQueryParams) {
         // 指定排序方式和排序欄位
         Sort.Direction sortDirection = "asc".equalsIgnoreCase(productQueryParams.getSort()) ? Sort.Direction.ASC : Sort.Direction.DESC;
         String orderBy = productQueryParams.getOrderBy() != null ? productQueryParams.getOrderBy() : "createdDate";
@@ -35,9 +36,13 @@ public class ProductServiceImpl implements ProductService {
             products.remove(products.size() - 1);
         }
 
-        return createProductResponse(productQueryParams.getPage(),productPage, products);
-
-
+        return PagedResponse.<Product>builder()
+                .page(productQueryParams.getPage())
+                .nextPage(productQueryParams.getPage()+1)
+                .limit(productQueryParams.getLimit())
+                .total(countProducts(productQueryParams))
+                .result(fetchProducts(productQueryParams,pageable).getContent())
+                .build();
     }
 
     @Override
@@ -119,12 +124,19 @@ public class ProductServiceImpl implements ProductService {
             return productRepository.findAll(pageable);
         }
     }
-    //建立返回格式
-    private Map<String,Object> createProductResponse(int page, Page<Product> productPage, List<Product> products){
-        Map<String, Object> response = new HashMap<>();
-        response.put("page", page);
-        response.put("next_page", productPage.hasNext() ? page + 1 : null);
-        response.put("data", products);
-        return response;
+
+    private long countProducts(ProductQueryParams productQueryParams) {
+        if (productQueryParams.getProductCategory() != null
+                && productQueryParams.getKeyword() != null
+                && !productQueryParams.getKeyword().trim().isEmpty()
+        ) {
+            return productRepository.countByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword());
+        } else if (productQueryParams.getProductCategory() != null) {
+            return productRepository.countByCategory(productQueryParams.getProductCategory());
+        } else if (productQueryParams.getKeyword() != null && !productQueryParams.getKeyword().trim().isEmpty()) {
+            return productRepository.countByProductNameContaining(productQueryParams.getKeyword());
+        } else {
+            return productRepository.count();
+        }
     }
 }
