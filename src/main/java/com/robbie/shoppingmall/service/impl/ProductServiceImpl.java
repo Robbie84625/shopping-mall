@@ -106,37 +106,52 @@ public class ProductServiceImpl implements ProductService {
         productRepository.deleteById(productId);
     }
 
+    private enum QueryType {
+        CATEGORY_AND_KEYWORD, CATEGORY_ONLY, KEYWORD_ONLY, NONE
+    }
+
+    private QueryType determineQueryType(ProductQueryParams productQueryParams){
+        boolean hasCategory = productQueryParams.getProductCategory() != null;
+        boolean hasKeyword = productQueryParams.getKeyword() != null;
+
+        if(hasCategory && hasKeyword){
+            return QueryType.CATEGORY_AND_KEYWORD;
+        } else if (hasCategory) {
+            return QueryType.CATEGORY_ONLY;
+        } else if (hasKeyword) {
+            return QueryType.KEYWORD_ONLY;
+        }else {
+            return QueryType.NONE;
+        }
+    }
+
     private Page<Product> fetchProducts(ProductQueryParams productQueryParams,Pageable pageable){
-        if (productQueryParams.getProductCategory() != null
-                && productQueryParams.getKeyword() != null
-                && !productQueryParams.getKeyword().trim().isEmpty()
-        ) {
-            // 同時按類別和關鍵字搜索
-            return productRepository.findByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword(), pageable);
-        } else if (productQueryParams.getProductCategory() != null) {
-            // 只按類別搜索
-            return productRepository.findByCategory(productQueryParams.getProductCategory(), pageable);
-        } else if (productQueryParams.getKeyword() != null && !productQueryParams.getKeyword().trim().isEmpty()) {
-            // 只按關鍵字搜索
-            return productRepository.findByProductNameContaining(productQueryParams.getKeyword(), pageable);
-        } else {
-            // 沒有搜索條件，返回所有產品
-            return productRepository.findAll(pageable);
+        QueryType queryType = determineQueryType(productQueryParams);
+
+        switch (queryType){
+            case CATEGORY_AND_KEYWORD:
+                return productRepository.findByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword(), pageable);
+            case CATEGORY_ONLY:
+                return productRepository.findByCategory(productQueryParams.getProductCategory(), pageable);
+            case KEYWORD_ONLY:
+                return productRepository.findByProductNameContaining(productQueryParams.getKeyword(), pageable);
+            default:
+                return productRepository.findAll(pageable);
         }
     }
 
     private long countProducts(ProductQueryParams productQueryParams) {
-        if (productQueryParams.getProductCategory() != null
-                && productQueryParams.getKeyword() != null
-                && !productQueryParams.getKeyword().trim().isEmpty()
-        ) {
-            return productRepository.countByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword());
-        } else if (productQueryParams.getProductCategory() != null) {
-            return productRepository.countByCategory(productQueryParams.getProductCategory());
-        } else if (productQueryParams.getKeyword() != null && !productQueryParams.getKeyword().trim().isEmpty()) {
-            return productRepository.countByProductNameContaining(productQueryParams.getKeyword());
-        } else {
-            return productRepository.count();
+        QueryType queryType = determineQueryType(productQueryParams);
+
+        switch (queryType) {
+            case CATEGORY_AND_KEYWORD:
+                return productRepository.countByCategoryAndProductNameContaining(productQueryParams.getProductCategory(), productQueryParams.getKeyword());
+            case CATEGORY_ONLY:
+                return productRepository.countByCategory(productQueryParams.getProductCategory());
+            case KEYWORD_ONLY:
+                return productRepository.countByProductNameContaining(productQueryParams.getKeyword());
+            default:
+                return productRepository.count();
         }
     }
 }
