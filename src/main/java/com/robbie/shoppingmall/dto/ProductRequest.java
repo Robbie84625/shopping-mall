@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @Builder
 public class ProductRequest {
-    public ProductRequest builder;
+
     @NotNull
     private String productName;
     @NotNull
