@@ -9,10 +9,10 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ProductQueryParams {
-    private String keyword;
-    private ProductCategory productCategory;
-    private Integer page;
-    private Integer limit;
-    private String sort;
-    private String orderBy;
+  private String keyword;
+  private ProductCategory productCategory;
+  private Integer page;
+  private Integer limit;
+  private String sort;
+  private String orderBy;
 }

@@ -7,22 +7,16 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
-
 @Getter
 @Setter
 @Builder
 public class ProductRequest {
-    public ProductRequest builder;
-    @NotNull
-    private String productName;
-    @NotNull
-    private ProductCategory productCategory;
-    @NotNull
-    private String imageUrl;
-    @NotNull
-    private Integer price;
-    @NotNull
-    private Integer stock;
 
-    private String description;
+  @NotNull private String productName;
+  @NotNull private ProductCategory productCategory;
+  @NotNull private String imageUrl;
+  @NotNull private Integer price;
+  @NotNull private Integer stock;
+
+  private String description;
 }

@@ -10,40 +10,39 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name="product")
+@Table(name = "product")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "product_id")
-    private Integer productId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "product_id")
+  private Integer productId;
 
-    @Column(name="product_name")
-    private String productName;
+  @Column(name = "product_name")
+  private String productName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name="category")
-    private ProductCategory category;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "category")
+  private ProductCategory category;
 
-    @Column(name="image_url")
-    private String imageUrl;
+  @Column(name = "image_url")
+  private String imageUrl;
 
-    @Column(name="price")
-    private Integer price;
+  @Column(name = "price")
+  private Integer price;
 
-    @Column(name="stock")
-    private Integer stock;
+  @Column(name = "stock")
+  private Integer stock;
 
-    @Column(name="description", nullable = true)
-    private String description;
+  @Column(name = "description", nullable = true)
+  private String description;
 
-    @Column(name="created_date")
-    private Date createdDate;
+  @Column(name = "created_date")
+  private Date createdDate;
 
-    @Column(name="last_modified_date")
-    private Date lastModifiedDate;
-
+  @Column(name = "last_modified_date")
+  private Date lastModifiedDate;
 }
