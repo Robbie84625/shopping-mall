@@ -7,6 +7,7 @@ import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.service.ProductService;
 import com.robbie.shoppingmall.util.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -89,8 +90,11 @@ public class ProductController {
 
     @DeleteMapping("/products/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable Integer productId){
-        productService.deleteProductById(productId);
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        try {
+            productService.deleteProductById(productId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (EmptyResultDataAccessException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
