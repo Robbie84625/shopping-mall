@@ -1,6 +1,7 @@
 package com.robbie.shoppingmall.dto;
 
 import com.robbie.shoppingmall.constant.ProductCategory;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,9 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+@Builder
 public class ProductRequest {
+    public ProductRequest builder;
     @NotNull
     private String productName;
     @NotNull
@@ -22,6 +25,4 @@ public class ProductRequest {
     private Integer stock;
 
     private String description;
-
-
 }
