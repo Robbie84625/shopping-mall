@@ -1,5 +1,6 @@
 package com.robbie.shoppingmall.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,9 +23,11 @@ public class Users {
     @Column(name = "email")
     private String email;
 
+    @JsonIgnore
     @Column(name = "password_hash")
     private String passwordHash;
 
+    @JsonIgnore
     @Column(name = "password_salt")
     private String passwordSalt;
 
