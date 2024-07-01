@@ -1,6 +1,5 @@
 package com.robbie.shoppingmall.controller;
 
-import com.robbie.shoppingmall.dao.UsersRepository;
 import com.robbie.shoppingmall.dto.UsersRequest;
 import com.robbie.shoppingmall.model.Users;
 import com.robbie.shoppingmall.service.UsersService;
@@ -21,6 +20,7 @@ public class UsersController {
 
     @PostMapping("/users/register")
     public ResponseEntity<Users> register(@RequestBody @Valid UsersRequest usersRequest){
+
         Integer userId = usersService.register(usersRequest);
 
         Users users = usersService.findUserById(userId);

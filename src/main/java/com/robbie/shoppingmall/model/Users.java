@@ -1,9 +1,6 @@
 package com.robbie.shoppingmall.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -14,6 +11,7 @@ import java.sql.Timestamp;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Users {
 
     @Id
@@ -30,8 +28,8 @@ public class Users {
     @Column(name = "password_salt")
     private String passwordSalt;
 
-    @Column(name = "create_date")
-    private Timestamp createTime;
+    @Column(name = "created_date")
+    private Timestamp createdDate;
 
     @Column(name = "last_modified_date")
     private Timestamp lastModifiedDate;
