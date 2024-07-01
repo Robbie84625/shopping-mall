@@ -5,8 +5,6 @@ import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.util.PagedResponse;
 
-import java.util.List;
-import java.util.Map;
 
 public interface ProductService {
     Product getProductById(Integer id);

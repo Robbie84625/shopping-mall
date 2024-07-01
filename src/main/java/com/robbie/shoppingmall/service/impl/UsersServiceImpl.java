@@ -5,6 +5,8 @@ import com.robbie.shoppingmall.dto.UsersRequest;
 import com.robbie.shoppingmall.exceptions.UserAlreadyExistsException;
 import com.robbie.shoppingmall.model.Users;
 import com.robbie.shoppingmall.service.UsersService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ import java.util.Base64;
 
 @Service
 public class UsersServiceImpl implements UsersService {
+    Logger log = LoggerFactory.getLogger(UsersServiceImpl.class);
+
     @Autowired
     private UsersRepository usersRepository;
 
@@ -27,7 +31,8 @@ public class UsersServiceImpl implements UsersService {
         Boolean emailExist = usersRepository.existsByEmail(usersRequest.getEmail());
 
         if (emailExist) {
-            throw new UserAlreadyExistsException("Email already registered");
+            log.warn("該 email {} 已經被註冊",usersRequest.getEmail());
+            throw new UserAlreadyExistsException("Email 已經被註冊");
         }
 
         PasswordInfo passwordInfo = hashPassword(usersRequest.getPassword());
