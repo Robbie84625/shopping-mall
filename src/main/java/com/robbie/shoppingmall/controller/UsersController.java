@@ -1,8 +1,9 @@
 package com.robbie.shoppingmall.controller;
 
 import com.robbie.shoppingmall.dto.UsersRequest;
+import com.robbie.shoppingmall.model.LoginTocken;
 import com.robbie.shoppingmall.model.Users;
-import com.robbie.shoppingmall.service.UsersService;
+import com.robbie.shoppingmall.service.interfaces.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,9 @@ public class UsersController {
         Users users = usersService.findUserById(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(users);
+    }
+
+    public ResponseEntity<LoginTocken> login(@RequestBody @Valid UsersRequest usersRequest){
+
     }
 }

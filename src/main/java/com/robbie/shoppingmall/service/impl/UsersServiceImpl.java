@@ -3,13 +3,13 @@ package com.robbie.shoppingmall.service.impl;
 import com.robbie.shoppingmall.dao.UsersRepository;
 import com.robbie.shoppingmall.dto.UsersRequest;
 import com.robbie.shoppingmall.exceptions.UserAlreadyExistsException;
+import com.robbie.shoppingmall.exceptions.UserAuthenticationException;
+import com.robbie.shoppingmall.model.PasswordInfo;
 import com.robbie.shoppingmall.model.Users;
-import com.robbie.shoppingmall.service.UsersService;
+import com.robbie.shoppingmall.service.interfaces.UsersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,20 +37,15 @@ public class UsersServiceImpl implements UsersService {
 
         PasswordInfo passwordInfo = hashPassword(usersRequest.getPassword());
 
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        Timestamp timestamp = covertTimestamp(currentTime);
-
+        Timestamp timestamp = covertTimestamp(LocalDateTime.now());
 
         Users newUser = Users.builder()
                 .email(usersRequest.getEmail())
-                .passwordHash(passwordInfo.passwordHash)
-                .passwordSalt(passwordInfo.passwordSalt)
+                .passwordHash(passwordInfo.getPasswordHash())
+                .passwordSalt(passwordInfo.getPasswordSalt())
                 .createdDate(timestamp)
                 .lastModifiedDate(timestamp)
                 .build();
-
-        System.out.println(newUser);
 
         Users saveUser = usersRepository.save(newUser);
 
@@ -60,6 +55,11 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public Users findUserById(Integer userId) {
         return usersRepository.findById(userId).orElse(null);
+    }
+
+    @Override
+    public Users login(UsersRequest usersRequest) {
+       Users users = usersRepository.findByEmail(usersRequest.getEmail());
     }
 
     private PasswordInfo hashPassword(String password){
@@ -74,13 +74,6 @@ public class UsersServiceImpl implements UsersService {
         return new PasswordInfo(hashedPassword, saltStr);
     }
 
-    @Getter
-    @RequiredArgsConstructor
-    private static class PasswordInfo {
-        private final String passwordHash;
-        private final String passwordSalt;
-    }
-
     private Timestamp covertTimestamp(LocalDateTime currentTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSS");
         // 格式化當前時間
@@ -89,4 +82,18 @@ public class UsersServiceImpl implements UsersService {
         // 將格式化的時間轉換為 Timestamp
         return Timestamp.valueOf(formattedDateTime);
     }
+
+    private Users checkEmailAndPassword(Users users,UsersRequest usersRequest){
+        if (users == null) {
+            throw new UserAuthenticationException("帳號不存在");
+        }
+        String hashedRequestPassword = BCrypt.hashpw(usersRequest.getPassword(), BCrypt.gensalt(12) + users.getPasswordSalt());
+
+        if (!hashedRequestPassword.equals(users.getPasswordHash())) {
+            throw new UserAuthenticationException("帳號密碼驗證錯誤");
+        }
+        return users;
+    }
+
+
 }

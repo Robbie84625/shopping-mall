@@ -1,4 +1,4 @@
-package com.robbie.shoppingmall.service;
+package com.robbie.shoppingmall.service.interfaces;
 
 import com.robbie.shoppingmall.dto.ProductQueryParams;
 import com.robbie.shoppingmall.dto.ProductRequest;
