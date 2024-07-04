@@ -30,6 +30,6 @@ public class UsersController {
     }
 
     public ResponseEntity<LoginTocken> login(@RequestBody @Valid UsersRequest usersRequest){
-
+        return ResponseEntity.status(HttpStatus.OK).body(usersService.login(usersRequest));
     }
 }

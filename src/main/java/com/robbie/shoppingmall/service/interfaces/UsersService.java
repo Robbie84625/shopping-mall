@@ -1,6 +1,7 @@
 package com.robbie.shoppingmall.service.interfaces;
 
 import com.robbie.shoppingmall.dto.UsersRequest;
+import com.robbie.shoppingmall.model.LoginTocken;
 import com.robbie.shoppingmall.model.Users;
 
 public interface UsersService {
@@ -8,5 +9,5 @@ public interface UsersService {
 
     public Users findUserById(Integer userId);
 
-    public Users login(UsersRequest usersRequest);
+    public LoginTocken login(UsersRequest usersRequest);
 }

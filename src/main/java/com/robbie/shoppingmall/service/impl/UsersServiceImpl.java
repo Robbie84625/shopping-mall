@@ -4,9 +4,11 @@ import com.robbie.shoppingmall.dao.UsersRepository;
 import com.robbie.shoppingmall.dto.UsersRequest;
 import com.robbie.shoppingmall.exceptions.UserAlreadyExistsException;
 import com.robbie.shoppingmall.exceptions.UserAuthenticationException;
+import com.robbie.shoppingmall.model.LoginTocken;
 import com.robbie.shoppingmall.model.PasswordInfo;
 import com.robbie.shoppingmall.model.Users;
 import com.robbie.shoppingmall.service.interfaces.UsersService;
+import com.robbie.shoppingmall.util.JWTUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -18,6 +20,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -25,6 +29,9 @@ public class UsersServiceImpl implements UsersService {
 
     @Autowired
     private UsersRepository usersRepository;
+
+    @Autowired
+    private JWTUtil jwtUtil;
 
     @Override
     public Integer register(UsersRequest usersRequest) {
@@ -58,8 +65,17 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public Users login(UsersRequest usersRequest) {
+    public LoginTocken login(UsersRequest usersRequest) {
        Users users = usersRepository.findByEmail(usersRequest.getEmail());
+
+       String token = checkEmailAndPassword(users,usersRequest);
+
+       LoginTocken loginTocken = LoginTocken.builder()
+               .token(token)
+               .email(users.getEmail())
+               .build();
+
+       return loginTocken;
     }
 
     private PasswordInfo hashPassword(String password){
@@ -83,7 +99,7 @@ public class UsersServiceImpl implements UsersService {
         return Timestamp.valueOf(formattedDateTime);
     }
 
-    private Users checkEmailAndPassword(Users users,UsersRequest usersRequest){
+    private String checkEmailAndPassword(Users users,UsersRequest usersRequest){
         if (users == null) {
             throw new UserAuthenticationException("帳號不存在");
         }
@@ -92,8 +108,10 @@ public class UsersServiceImpl implements UsersService {
         if (!hashedRequestPassword.equals(users.getPasswordHash())) {
             throw new UserAuthenticationException("帳號密碼驗證錯誤");
         }
-        return users;
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("users", users);  // 直接存储User对象
+        String token = jwtUtil.generateToken(claims, 3600000);
+
+        return token;
     }
-
-
 }
