@@ -4,7 +4,7 @@ import com.robbie.shoppingmall.constant.ProductCategory;
 import com.robbie.shoppingmall.dto.ProductQueryParams;
 import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
-import com.robbie.shoppingmall.service.ProductService;
+import com.robbie.shoppingmall.service.interfaces.ProductService;
 import com.robbie.shoppingmall.util.PagedResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

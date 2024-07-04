@@ -1,5 +1,6 @@
 package com.robbie.shoppingmall.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,5 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    public  String getSecretKey(){
+        return secretKey;
     }
 }
