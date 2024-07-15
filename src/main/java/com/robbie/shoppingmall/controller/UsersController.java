@@ -17,7 +17,8 @@ import javax.validation.Valid;
 @RestController
 public class UsersController {
 
-  @Autowired private UsersService usersService;
+  @Autowired
+  private UsersService usersService;
 
   @PostMapping("/users/register")
   public ResponseEntity<Users> register(@RequestBody @Valid UsersRequest usersRequest) throws ValidException {
