@@ -1,10 +1,8 @@
 package com.robbie.shoppingmall.config;
 
-import com.robbie.shoppingmall.exceptions.UserAlreadyExistsException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import com.robbie.shoppingmall.common.ErrorInfo;
+import com.robbie.shoppingmall.common.ResultError;
+import com.robbie.shoppingmall.exceptions.ValidException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,18 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(UserAlreadyExistsException ex){
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(),ex.getMessage());
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
-    }
-}
-
-@Data
-@AllArgsConstructor
-class ErrorResponse{
-    private int status;
-    private String message;
+  @ExceptionHandler(ValidException.class)
+  public ResponseEntity<ResultError> handleValidException(ValidException ex) {
+    ResultError errorInfo = ex.getResultError();
+    return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+  }
 }

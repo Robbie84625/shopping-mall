@@ -10,7 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class LoginTocken {
-    private String token;
-    private String type = "Bearer";
-    private String email;
+  private String token;
+  private String email;
 }

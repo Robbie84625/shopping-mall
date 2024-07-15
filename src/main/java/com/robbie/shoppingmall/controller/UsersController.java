@@ -1,6 +1,7 @@
 package com.robbie.shoppingmall.controller;
 
 import com.robbie.shoppingmall.dto.UsersRequest;
+import com.robbie.shoppingmall.exceptions.ValidException;
 import com.robbie.shoppingmall.model.LoginTocken;
 import com.robbie.shoppingmall.model.Users;
 import com.robbie.shoppingmall.service.interfaces.UsersService;
@@ -16,20 +17,21 @@ import javax.validation.Valid;
 @RestController
 public class UsersController {
 
-    @Autowired
-    private UsersService usersService;
+  @Autowired
+  private UsersService usersService;
 
-    @PostMapping("/users/register")
-    public ResponseEntity<Users> register(@RequestBody @Valid UsersRequest usersRequest){
+  @PostMapping("/users/register")
+  public ResponseEntity<Users> register(@RequestBody @Valid UsersRequest usersRequest) throws ValidException {
 
-        Integer userId = usersService.register(usersRequest);
+    Integer userId = usersService.register(usersRequest) ;
 
-        Users users = usersService.findUserById(userId);
+    Users users = usersService.findUserById(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(users);
-    }
+    return ResponseEntity.status(HttpStatus.OK).body(users);
+  }
 
-    public ResponseEntity<LoginTocken> login(@RequestBody @Valid UsersRequest usersRequest){
-        return ResponseEntity.status(HttpStatus.OK).body(usersService.login(usersRequest));
-    }
+  @PostMapping("/users/login")
+  public ResponseEntity<LoginTocken> login(@RequestBody @Valid UsersRequest usersRequest) throws ValidException {
+    return ResponseEntity.status(HttpStatus.OK).body(usersService.login(usersRequest));
+  }
 }

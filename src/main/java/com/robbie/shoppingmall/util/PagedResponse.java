@@ -10,9 +10,9 @@ import java.util.List;
 @Setter
 @Builder
 public class PagedResponse<T> {
-    private Integer limit;
-    private Integer page;
-    private Integer nextPage;
-    private long total;
-    private List<T> result;
+  private Integer limit;
+  private Integer page;
+  private Integer nextPage;
+  private long total;
+  private List<T> result;
 }

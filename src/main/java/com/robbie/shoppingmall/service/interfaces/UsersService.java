@@ -1,13 +1,15 @@
 package com.robbie.shoppingmall.service.interfaces;
 
 import com.robbie.shoppingmall.dto.UsersRequest;
+import com.robbie.shoppingmall.exceptions.ValidException;
 import com.robbie.shoppingmall.model.LoginTocken;
 import com.robbie.shoppingmall.model.Users;
 
 public interface UsersService {
-    public Integer register(UsersRequest usersRequest);
 
-    public Users findUserById(Integer userId);
+  Users findUserById(Integer userId);
 
-    public LoginTocken login(UsersRequest usersRequest);
+  LoginTocken login(UsersRequest usersRequest) throws ValidException;
+
+  Integer register(UsersRequest usersRequest) throws ValidException;
 }

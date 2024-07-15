@@ -13,16 +13,11 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class ProductRequest {
 
-    @NotNull
-    private String productName;
-    @NotNull
-    private ProductCategory productCategory;
-    @NotNull
-    private String imageUrl;
-    @NotNull
-    private Integer price;
-    @NotNull
-    private Integer stock;
+  @NotNull private String productName;
+  @NotNull private ProductCategory productCategory;
+  @NotNull private String imageUrl;
+  @NotNull private Integer price;
+  @NotNull private Integer stock;
 
-    private String description;
+  private String description;
 }

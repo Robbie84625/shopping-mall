@@ -6,16 +6,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface ProductRepository extends JpaRepository<Product, Integer> {
+  Page<Product> findByCategory(ProductCategory category, Pageable pageable);
 
+  Page<Product> findByProductNameContaining(String keyword, Pageable pageable);
 
-public interface ProductRepository extends JpaRepository<Product,Integer> {
-    Page<Product> findByCategory(ProductCategory category, Pageable pageable);
-    Page<Product> findByProductNameContaining(String keyword,Pageable pageable);
-    Page<Product> findByCategoryAndProductNameContaining(ProductCategory category,String keyword,Pageable pageable);
+  Page<Product> findByCategoryAndProductNameContaining(
+      ProductCategory category, String keyword, Pageable pageable);
 
-    long countByCategoryAndProductNameContaining(ProductCategory productCategory, String keyword);
+  long countByCategoryAndProductNameContaining(ProductCategory productCategory, String keyword);
 
-    long countByCategory(ProductCategory productCategory);
+  long countByCategory(ProductCategory productCategory);
 
-    long countByProductNameContaining(String keyword);
+  long countByProductNameContaining(String keyword);
 }

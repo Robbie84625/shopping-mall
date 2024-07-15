@@ -5,15 +5,14 @@ import com.robbie.shoppingmall.dto.ProductRequest;
 import com.robbie.shoppingmall.model.Product;
 import com.robbie.shoppingmall.util.PagedResponse;
 
-
 public interface ProductService {
-    Product getProductById(Integer id);
+  Product getProductById(Integer id);
 
-    Integer createProduct(ProductRequest productRequest);
+  Integer createProduct(ProductRequest productRequest);
 
-    void updateProduct(Integer productId, ProductRequest productRequest);
+  void updateProduct(Integer productId, ProductRequest productRequest);
 
-    void deleteProductById(Integer productId);
+  void deleteProductById(Integer productId);
 
-    PagedResponse<Product> getProducts(ProductQueryParams productQueryParams);
+  PagedResponse<Product> getProducts(ProductQueryParams productQueryParams);
 }
